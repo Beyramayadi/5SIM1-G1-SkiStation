@@ -1,13 +1,81 @@
 package tn.esprit.spring;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import tn.esprit.spring.entities.Subscription;
+import tn.esprit.spring.entities.TypeSubscription;
+import lombok.extern.slf4j.Slf4j;
+
+import tn.esprit.spring.repositories.ISubscriptionRepository;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.List;
+import java.util.stream.StreamSupport;
+
+
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ExtendWith(MockitoExtension.class)
+@Slf4j
 @SpringBootTest
 class GestionStationSkiApplicationTests {
 
+	@Autowired
+	ISubscriptionRepository subscriptionRepository;
+
+	Subscription s = Subscription.builder().price(5F).typeSub(TypeSubscription.ANNUAL).endDate(LocalDate.of(2024, Month.JANUARY, 1)).startDate(LocalDate.of(2014, Month.JANUARY, 1)).build();
+
+    //test pour ajout
 	@Test
-	void contextLoads() {
+	@Order(0)
+	public void addSubsciption(){
+		s = subscriptionRepository.save(s);
+		log.info(s.toString());
+		Assertions.assertNotNull(s.getNumSub());
+	}
+
+	//test pour modification
+	@Test
+	@Order(1)
+	public void editSubscription(){
+		s.setPrice(2F);
+		s = subscriptionRepository.save(s);
+		log.info(s.toString());
+		Assertions.assertNotEquals(s.getPrice(), 5f);
+	}
+
+	//test pour lister
+	@Test
+	@Order(2)
+	public void showSubscription(){
+		List<Subscription> list = (List<Subscription>) subscriptionRepository.findAll();
+		log.info(list.size()+"");
+		Assertions.assertTrue(list.size() > 0);
+	}
+
+	//test pour supression
+	@Test
+	@Order(4)
+	public void supprimerMagasin() {
+		subscriptionRepository.delete(s);
+		Subscription deletedSubscription = subscriptionRepository.findById(s.getNumSub()).orElse(null);
+		Assertions.assertNull(deletedSubscription, "The subscription should have been deleted");
+	}
+
+
+	@Test
+	@Order(5)
+	public void compter() {
+		long taille = subscriptionRepository.count();
+		long count = StreamSupport.stream(subscriptionRepository.findAll().spliterator(), false)
+				.count();
+		Assertions.assertEquals(taille,count);
 	}
 
 }

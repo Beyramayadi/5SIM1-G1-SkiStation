@@ -19,5 +19,7 @@ public interface ISubscriptionServices {
 
 	List<Subscription> retrieveSubscriptionsByDates(LocalDate startDate, LocalDate endDate);
 
+	List<Subscription> findAllSubscriptions();
+
 	void retrieveSubscriptions();
 }
