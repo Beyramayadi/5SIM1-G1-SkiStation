@@ -29,12 +29,12 @@ class GestionStationSkiApplicationTests {
 	@Autowired
 	ISubscriptionRepository subscriptionRepository;
 
-	Subscription s = Subscription.builder().price(5F).typeSub(TypeSubscription.ANNUAL).endDate(LocalDate.of(2024, Month.JANUARY, 1)).startDate(LocalDate.of(2014, Month.JANUARY, 1)).build();
+	Subscription s = Subscription.builder().numSub(123456L).price(5F).typeSub(TypeSubscription.ANNUAL).endDate(LocalDate.of(2024, Month.JANUARY, 1)).startDate(LocalDate.of(2014, Month.JANUARY, 1)).build();
 
     //test pour ajout
 	@Test
 	@Order(0)
-	public void addSubsciption(){
+	 void addSubsciption(){
 		s = subscriptionRepository.save(s);
 		log.info(s.toString());
 		Assertions.assertNotNull(s.getNumSub());
@@ -43,17 +43,17 @@ class GestionStationSkiApplicationTests {
 	//test pour modification
 	@Test
 	@Order(1)
-	public void editSubscription(){
+	 void editSubscription(){
 		s.setPrice(2F);
 		s = subscriptionRepository.save(s);
 		log.info(s.toString());
-		Assertions.assertNotEquals(s.getPrice(), 5f);
+		Assertions.assertNotEquals( 5f,s.getPrice());
 	}
 
 	//test pour lister
 	@Test
 	@Order(2)
-	public void showSubscription(){
+	 void showSubscription(){
 		List<Subscription> list = (List<Subscription>) subscriptionRepository.findAll();
 		log.info(list.size()+"");
 		Assertions.assertTrue(list.size() > 0);
@@ -62,7 +62,7 @@ class GestionStationSkiApplicationTests {
 	//test pour supression
 	@Test
 	@Order(4)
-	public void supprimerMagasin() {
+	 void supprimerMagasin() {
 		subscriptionRepository.delete(s);
 		Subscription deletedSubscription = subscriptionRepository.findById(s.getNumSub()).orElse(null);
 		Assertions.assertNull(deletedSubscription, "The subscription should have been deleted");
@@ -71,7 +71,7 @@ class GestionStationSkiApplicationTests {
 
 	@Test
 	@Order(5)
-	public void compter() {
+	 void compter() {
 		long taille = subscriptionRepository.count();
 		long count = StreamSupport.stream(subscriptionRepository.findAll().spliterator(), false)
 				.count();
