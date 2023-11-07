@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+
+  skistation-backend:
+    depends_on:
+      - mysqldb
+    restart: on-failure
+    ports:
+      - "8091:8091"
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
+  .m2:
