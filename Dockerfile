@@ -1,7 +1,10 @@
-FROM openjdk:11
+FROM openjdk:8-jdk-alpine
+
+
 EXPOSE 8091
 
-# Download the JAR file from the specified URL and rename it to kaddem-1.0.jar
-RUN curl -o kaddem-1.0.jar -L "http://192.168.1.17:8081/:8081/repository/maven-releases/tn/esprit/spring/kaddem/0.0.1/kaddem-0.0.1.jar"
 
-ENTRYPOINT ["java", "-jar", "kaddem-1.0.jar"]
+ADD target/gestion-station-ski-1.0.jar gestion-station-ski-1.0.jar
+
+
+ENTRYPOINT ["java", "-jar", "/gestion-station-ski-1.0.jar"]
