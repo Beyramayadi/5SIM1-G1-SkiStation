@@ -5,8 +5,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import tn.esprit.spring.entities.Subscription;
 import tn.esprit.spring.entities.TypeSubscription;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +29,9 @@ import java.util.stream.StreamSupport;
 @ExtendWith(MockitoExtension.class)
 @Slf4j
 @SpringBootTest
+
+
+@ActiveProfiles("test")
 class GestionStationSkiApplicationTests {
 
 	@Autowired

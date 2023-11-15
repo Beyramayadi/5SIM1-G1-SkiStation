@@ -2,13 +2,17 @@ package tn.esprit.spring;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tn.esprit.spring.entities.Subscription;
 import tn.esprit.spring.entities.TypeSubscription;
 import tn.esprit.spring.repositories.ISubscriptionRepository;
@@ -26,7 +30,11 @@ import static org.mockito.Mockito.verify;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
+@ActiveProfiles("test")
+@ExtendWith(SpringExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ExtendWith(MockitoExtension.class)
+@SpringBootTest(properties = "spring.config.name=application-test")
 public class GestionStationSkiApplicationTestsMockito {
 
 
