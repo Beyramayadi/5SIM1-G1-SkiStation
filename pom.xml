@@ -88,6 +88,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>5SIM1-G1-SkiStation</finalName>
 	</build>
 
 </project>
