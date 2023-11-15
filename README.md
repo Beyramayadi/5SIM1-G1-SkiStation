@@ -1,2 +1,1 @@
-# 5SIM1-G1-SkiStation
-Devops Academic Project
+# 5twin5-G6-SkyStation

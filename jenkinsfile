@@ -1,0 +1,97 @@
+pipeline{
+    agent any
+
+
+
+    stages {
+
+
+        stage('Getting project from Git') {
+            steps{
+      			checkout([$class: 'GitSCM', branches: [[name: '*/HamzaJouini-5SIM1-G1']],
+			extensions: [],
+			userRemoteConfigs: [[url: 'https://github.com/Beyramayadi/5SIM1-G1-SkiStation.git']]])
+            }
+        }
+
+
+       stage('Cleaning the project') {
+            steps{
+                	sh "mvn -B -DskipTests clean  "
+            }
+        }
+
+
+
+        stage('Artifact Construction') {
+            steps{
+                	sh "mvn -B -DskipTests package "
+            }
+        }
+
+
+
+        stage('Code Quality Check via SonarQube') {
+            steps{
+
+             		sh " mvn clean verify sonar:sonar -Dsonar.projectKey=devops -Dsonar.projectName='devops' -Dsonar.host.url=http://192.168.33.10:9000 -Dsonar.token=sqp_c3ab334c31ef079ca46d15555edc23ac48dd70f3"
+
+            }
+        }
+
+
+        stage('Publish to Nexus') {
+            steps {
+
+
+  sh 'mvn clean package deploy:deploy-file -DgroupId=tn.esprit.spring -DartifactId=gestion-station-ski -Dversion=1.0 -DgeneratePom=true -Dpackaging=jar -DrepositoryId=maven-releases -Durl=http://192.168.33.10:8081/repository/maven-releases/ -Dfile=target/gestion-station-ski-1.0.jar'
+
+
+
+            }
+        }
+
+stage('Build Docker Image') {
+                      steps {
+                          script {
+                            sh 'docker build -t hamzajouini/spring-app:HamzaJouini-5SIM1-G1 .'
+                          }
+                      }
+                  }
+
+                  stage('login dockerhub') {
+                                        steps {
+				sh 'docker login -u hamzajouini --password dckr_pat_3TVxoi61EAblIUrdejBjVjcww5k'
+                                            }
+		  }
+	    
+	                      stage('Push Docker Image') {
+                                        steps {
+                                   sh 'docker push hamzajouini/spring-app:HamzaJouini-5SIM1-G1'
+                                            }
+		  }
+
+
+		   stage('Run Spring && MySQL Containers') {
+                                steps {
+                                    script {
+                                      sh 'docker compose up -d'
+                                    }
+                                }
+                            }
+
+	      
+}
+
+	    
+        post {
+
+       always {
+            cleanWs()
+       }
+    }
+
+    
+	
+}
+       
