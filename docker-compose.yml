@@ -18,7 +18,9 @@ services:
   gestionski-backend:
     depends_on:
       - mysqldb
-    build: ./
+    build:
+      context: .
+      dockerfile: Dockerfile
     networks:
       - mynetwork
     restart: on-failure
@@ -28,6 +30,10 @@ services:
       -  .m2:/root/.m2
     stdin_open: true
     tty: true
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/devops?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD:
 networks:
   mynetwork:
     driver: bridge
