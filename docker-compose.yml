@@ -4,30 +4,32 @@ version: "3.8"
 
 services:
   mysqldb:
-    image: mysql:latest
+    image: mysql:8.0
+    container_name: mysqldb
     restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    networks:
+      - mynetwork
     ports:
-      - 3307:3307
+      - "3306:3306"
     volumes:
       - db:/var/lib/mysql
   gestionski-backend:
     depends_on:
       - mysqldb
     build: ./
+    networks:
+      - mynetwork
     restart: on-failure
     ports:
-      - 8091:8092
-    environment:
-      - spring.datasource.url=jdbc:mysql://mysqldb:3306/stationSki?createDatabaseIfNotExist=true
-      - spring.datasource.username=root
-      - spring.datasource.password=
-      - spring.jpa.show-sql=true
-      - spring.jpa.hibernate.ddl-auto=update
-      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+      - "8089:8089"
     volumes:
       -  .m2:/root/.m2
     stdin_open: true
     tty: true
-
+networks:
+  mynetwork:
+    driver: bridge
 volumes:
   db:
