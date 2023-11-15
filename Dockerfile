@@ -4,7 +4,6 @@ EXPOSE 8089
 
 # Définissez le répertoire de travail dans le conteneur
 WORKDIR /app
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+ADD /target/*.jar ski-station.jar
 # Commande d'entrée pour exécuter l'application Java
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "/station-ski.jar"]
